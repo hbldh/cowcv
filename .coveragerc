@@ -1,0 +1,14 @@
+[run]
+branch = True
+source = cowtippin
+include = */cowtippin/*
+omit =
+    */setup.py
+
+[report]
+exclude_lines =
+    except NameError
+    except ImportError
+
+
+

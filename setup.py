@@ -30,17 +30,17 @@ if sys.argv[-1] == 'publish':
 def read(f):
     return open(f, encoding='utf-8').read()
 
-with open('cowtippin/__init__.py', 'r') as fd:
+with open('cowcv/__init__.py', 'r') as fd:
     version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
                         fd.read(), re.MULTILINE).group(1)
 
 
 setup(
-    name='cowtippin',
+    name='cowcv',
     version=version,
     author='Henrik Blidh',
     author_email='henrik.blidh@nedomkull.com',
-    url='https://github.com/hbldh/cowtippin',
+    url='https://github.com/hbldh/cowcv',
     description='',
     long_description=read('README.rst'),
     license='MIT',

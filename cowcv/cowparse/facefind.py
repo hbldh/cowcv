@@ -16,4 +16,4 @@ from __future__ import absolute_import
 import cv2
 
 def find_cowface(img):
-    pass
+    return 0, 0, img.size[0], img.size[1]

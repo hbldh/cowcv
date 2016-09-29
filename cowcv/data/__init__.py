@@ -26,6 +26,20 @@ def cow1():
     return _image(image_path, _COW1_URL)
 
 
+def cow1_face_coordinates():
+    """
+    (960, 710), (2650, 2150)
+
+    :return:
+    """
+    x = 900
+    y = 800
+    w = 2650 - x
+    h = 2150 - y
+
+    return x, y, w, h
+
+
 def cow2():
     """The second test cow JPEG.
 
@@ -34,7 +48,22 @@ def cow2():
     """
     image_path = pathlib.Path(
         __file__).resolve().parent.joinpath('cow2.jpg')
-    return _image(image_path, _COW1_URL)
+    return _image(image_path, _COW2_URL)
+
+
+def cow2_face_coordinates():
+    """
+    (500, 450), (3350, 3000)
+
+    :return:
+    """
+    x = 450
+    y = 500
+    w = 3350 - x
+    h = 3000 - y
+
+    return x, y, w, h
+
 
 
 def _image(pth, url):

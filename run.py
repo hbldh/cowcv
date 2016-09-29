@@ -16,32 +16,19 @@ from __future__ import absolute_import
 
 import numpy as np
 
-from hitherdither import data
-from hitherdither.palette import Palette
-from hitherdither.diffusion import error_diffusion_dithering
-from hitherdither.ordered import yliluoma
-import hitherdither.utils
+from cowcv.data import cow1, cow1_face_coordinates
+from cowcv.cowparse import facefind, tagfind, ocr
 
 # Fetch the example image and the palette from Yliluoma's page.
-s = data.scene()
-p = Palette(hitherdither.data.palette())
+cow1 = cow1()
+x,y,w,h = cow1_face_coordinates()
+# x,y,w,h = facefind.find_cowface(cow1)
+cowface = np.array(cow1)[y:y+h, x:x+w, :]
 
-p2 = Palette.create_by_median_cut(s)
+rois = tagfind.find_yellow_tag_candidates(cowface)
+for roi in rois:
+    digits = ocr.detect_digits_in_roi(roi)
+    print(digits)
 
-# Map raw image to the palette
-closest_colour = p.image_closest_colour(s, order=2)
-# Render the undithered image with only colours in
-# the palette as a RGB numpy array.
-undithered_image = p.render(closest_colour)
-# Create a PIL Image of mode "P" from the palette colour index matrix.
-s_png = p.create_PIL_png_from_closest_colour(closest_colour)
-s_png.show()
 
-#print(np.linalg.norm(undithered_image - np.array(s_png.convert("RGB"))))
-
-# Render an Yliluoma algorithm 1 image.
-yliluoma1_image = yliluoma.yliluomas_1_ordered_dithering(
-    s, p, order=8)
-yliluoma1_image.resize(np.array(yliluoma1_image.size) * 4).show()
-#yliluoma1_image.show()
 

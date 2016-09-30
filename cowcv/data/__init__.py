@@ -57,8 +57,8 @@ def cow2_face_coordinates():
 
     :return:
     """
+    y = 700
     x = 450
-    y = 500
     w = 3350 - x
     h = 3000 - y
 

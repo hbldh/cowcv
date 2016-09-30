@@ -17,6 +17,7 @@ import numpy as np
 import cv2
 from PIL import Image
 
+from cowcv.cowparse.utils import BoundingBox
 
 def find_yellow_tag_candidates(cowface):
 
@@ -26,21 +27,16 @@ def find_yellow_tag_candidates(cowface):
     kernel = np.ones((3, 3), np.uint8)
     cowface_blob = cv2.dilate(cowface_blob, kernel, iterations=10)
     cowface_blob = cv2.erode(cowface_blob, kernel, iterations=11)
-    #Image.fromarray(sure_bg).show()
     image, contours, hierarchy = cv2.findContours(cowface_blob, cv2.RETR_TREE,
                                                   cv2.CHAIN_APPROX_SIMPLE)
 
     roi_array = []
     for c in contours:
-        x_min, y_min = c.min(axis=0).flatten()
-        x_max, y_max = c.max(axis=0).flatten()
-        roi = cowface[y_min:y_max, x_min:x_max, :].copy()
-        roi_map = cowface_blob[y_min:y_max, x_min:x_max] > 0
-        roi[roi_map == 0] = np.array(roi[roi_map > 0].mean(axis=0), 'uint8')
-        roi_array.append((roi, roi_map))
-        #Image.fromarray(roi).show()
+        bb = BoundingBox.create_from_coordinates(c)
+        bb.add_active_region(bb(cowface_blob) > 0)
+        roi_array.append(bb)
 
-    roi_array.sort(key=lambda x: np.prod(x[0].shape), reverse=True)
+    roi_array.sort(key=lambda x: np.prod(x.shape), reverse=True)
 
     return roi_array
 

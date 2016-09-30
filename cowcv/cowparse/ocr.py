@@ -17,31 +17,49 @@ import numpy as np
 from PIL import Image
 import cv2
 
+from cowcv.cowparse.utils import BoundingBox
 
-def detect_digits_in_roi(roi_spec):
-    roi, roi_map = roi_spec
-    Image.fromarray(roi).show()
+def detect_digits_in_roi(cowface, roi_bb):
+    roi, roi_map = roi_bb(cowface), roi_bb.active_region
 
     roi_gray = cv2.cvtColor(roi[:, :, ::-1], cv2.COLOR_BGR2GRAY)
-    #roi_gray[-roi_map] = 255
-
-    h = np.histogram(roi_gray[roi_map], bins=256)
 
     th2 = cv2.adaptiveThreshold(roi_gray, 255, cv2.ADAPTIVE_THRESH_MEAN_C, \
-                                cv2.THRESH_BINARY, 20, 1)
+                                cv2.THRESH_BINARY, 51, 1)
     th3 = cv2.adaptiveThreshold(roi_gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, \
-                                cv2.THRESH_BINARY, 20, 1)
-    Image.fromarray(th2).show()
-    Image.fromarray(th3).show()
+                                cv2.THRESH_BINARY, 51, 1)
 
-    #blurred = cv2.GaussianBlur(roi_gray, (5, 5), 0)
-    #pixels = blurred[roi_map].flatten()
-    #ret, cowface_blob = cv2.threshold(pixels, 0, 255,
-    #                                  cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-    roi_gray[roi_gray < ret] = 0
-    roi_gray[roi_gray >= ret] = 255
+    blurred = cv2.GaussianBlur(roi_gray, (5, 5), 0)
+    pixels = blurred[roi_map].flatten()
+    ret, cowface_blob = cv2.threshold(pixels, 0, 255,
+                                      cv2.THRESH_BINARY + cv2.THRESH_OTSU)
 
-    Image.fromarray(roi_gray).show()
+    ut = roi_gray.copy()
+    ut[roi_gray < ret] = 0
+    ut[roi_gray >= ret] = 255
+
+    #Image.fromarray(ut).show()
+
+    kernel = np.ones((3, 3), np.uint8)
+    img = cv2.dilate(th3, kernel, iterations=3)
+    img = cv2.erode(img, kernel, iterations=2)
+
+    mser = cv2.MSER_create()
+    regions = mser.detectRegions(roi_gray, None)
+
+    mser_bbs = []
+    for r in regions:
+        bb = BoundingBox.create_from_coordinates(r, relative_to=roi_bb)
+        bb_non_rel = BoundingBox.create_from_coordinates(r)
+        ar = np.zeros(bb.shape, 'bool')
+        ar[r - [bb_non_rel.x, bb_non_rel.y]] = 1
+        #for p in r:
+        #    ar[p] = 1
+        bb.add_active_region(ar)
+        mser_bbs.append(bb)
+        this_img = cv2.drawContours(cowface.copy(), [bb.contour], 0, (255, 0, 0), 3)
+        Image.fromarray(this_img).show()
+
 
     return []
 

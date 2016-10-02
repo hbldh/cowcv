@@ -47,19 +47,17 @@ def detect_digits_in_roi(cowface, roi_bb):
     mser = cv2.MSER_create()
     regions = mser.detectRegions(roi_gray, None)
 
+    hulls = [cv2.convexHull(p.reshape(-1, 1, 2)) for p in regions]
+    cv2.polylines(roi, hulls, 1, (0, 255, 0))
+    #Image.fromarray(roi).show()
+
     mser_bbs = []
     for r in regions:
         bb = BoundingBox.create_from_coordinates(r, relative_to=roi_bb)
-        bb_non_rel = BoundingBox.create_from_coordinates(r)
-        ar = np.zeros(bb.shape, 'bool')
-        ar[r - [bb_non_rel.x, bb_non_rel.y]] = 1
-        #for p in r:
-        #    ar[p] = 1
-        bb.add_active_region(ar)
         mser_bbs.append(bb)
-        this_img = cv2.drawContours(cowface.copy(), [bb.contour], 0, (255, 0, 0), 3)
-        Image.fromarray(this_img).show()
 
+        #Image.fromarray(bb.draw_box(cowface, (255, 0, 0))).show()
+        #Image.fromarray(bb.fill_active_region(cowface)).show()
 
     return []
 

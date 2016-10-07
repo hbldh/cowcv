@@ -21,8 +21,8 @@ from cowcv.data import cow1, cow2, cow1_face_coordinates, cow2_face_coordinates
 from cowcv.cowparse import facefind, tagfind, ocr, utils
 
 cow2 = cow2()
-#cowface2_bb = utils.BoundingBox(*cow2_face_coordinates())
-cowface2_bb = facefind.find_cowface(cow2)
+cowface2_bb = utils.BoundingBox(*cow2_face_coordinates())
+#cowface2_bb = facefind.find_cowface(cow2)
 cowface = cowface2_bb(np.array(cow2))
 
 rois = tagfind.find_yellow_tag_candidates(cowface)

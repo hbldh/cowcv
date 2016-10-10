@@ -48,3 +48,15 @@ def yellow_areas(img):
     return yellow_image
 
 
+
+def find_yellow_tag_candidates_optional(cowface):
+    """
+
+    yellow_to_find = 0xffea35  #RGB (255, 234, 53)
+
+    :param cowface:
+    :return:
+    """
+    rgb = [255, 234, 53]
+    d = cowface[:, :, ::-1] - rgb
+

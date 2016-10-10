@@ -10,6 +10,9 @@ Uses OpenCV and `PIL/Pillow <https://pillow.readthedocs.io/en/3.3.x/>`_.
 Description
 -----------
 
+- `Märkning och registrering av nötkreatur <http://www2.jordbruksverket.se/webdav/files/SJV/trycksaker/Jordbruksstod/js31v2.pdf>`_
+- `Godkänd märkningsutrustning för nötkreatur <http://www2.jordbruksverket.se/download/18.3a2dd4ec14f19a09a8b52d0a/1439294577516/jsi34_v5.pdf>`_
+- `Föreskrifter om ändring i Statens jordbruksverks föreskrifter (SJVFS 2007:12) om märkning och registrering av nötkreatur <http://www.jordbruksverket.se/download/18.33162a40151bcaffe88c1520/1450682394669/2015-044.pdf>`_
 
 
 Installation

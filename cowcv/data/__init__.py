@@ -13,6 +13,7 @@ from PIL import Image
 
 _COW1_URL = "https://dl.dropboxusercontent.com/u/21298554/cow1.jpg"
 _COW2_URL = "https://dl.dropboxusercontent.com/u/21298554/cow2.jpg"
+_COW3_URL = "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Kossa-2.jpg/800px-Kossa-2.jpg"
 
 
 def cow1():
@@ -53,7 +54,7 @@ def cow2():
 
 def cow2_face_coordinates():
     """
-    (500, 450), (3350, 3000)
+    (700, 450), (3350, 3000)
 
     :return:
     """
@@ -64,6 +65,29 @@ def cow2_face_coordinates():
 
     return x, y, w, h
 
+
+def cow3():
+    """The third test cow JPEG.
+
+    :return: The PIL image of third test cow.
+
+    """
+    image_path = pathlib.Path(
+        __file__).resolve().parent.joinpath('cow3.jpg')
+    return _image(image_path, _COW1_URL)
+
+
+def cow3_face_coordinates():
+    """
+
+    :return:
+    """
+    x = 0
+    y = 0
+    w = 2650 - x
+    h = 2150 - y
+
+    return x, y, w, h
 
 
 def _image(pth, url):

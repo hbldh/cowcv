@@ -14,9 +14,10 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import cv2
+from PIL import Image
 
 from cowcv.cowparse.ocr.classify import classify
-from cowcv.cowparse.utils import BoundingBox
+from cowcv.cowparse.geometry.bbox import BoundingBox
 
 
 def detect_digits_in_roi(cowface, roi_bb):
@@ -31,10 +32,22 @@ def detect_digits_in_roi(cowface, roi_bb):
 
     digits = []
     for possible_digit_region in mser_bbs:
+
+        # First simple filtering
+        if possible_digit_region.aspect_ratio < 3.0:
+            continue
+        if possible_digit_region.active_region_solidity < 0.3:
+            continue
+
         digit = classify(possible_digit_region(cowface_gray),
                          possible_digit_region)
         if digit is not None:
             digits.append((digit, possible_digit_region))
+
+    i = cowface.copy()
+    for d in digits:
+        d[1].draw_box(i)
+    Image.fromarray(i).show()
 
     return digits
 

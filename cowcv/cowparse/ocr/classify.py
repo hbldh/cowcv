@@ -15,14 +15,14 @@ from __future__ import absolute_import
 
 from cowcv.data.ocr import save_roi
 
-SAVE_IMAGES = True
+SAVE_IMAGES = False
 
 
 def classify(img, bb):
     if SAVE_IMAGES:
         save_roi(img, bb)
 
-    return None
+    return 1
 
 
 def extract_features(img, bb):

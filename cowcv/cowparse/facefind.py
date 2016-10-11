@@ -16,9 +16,7 @@ from __future__ import absolute_import
 import cv2
 import numpy as np
 from PIL import Image, ImageDraw
-from cowcv.cowparse.utils import BoundingBox
-
-
+from cowcv.cowparse.geometry.bbox import BoundingBox
 
 
 def find_cowface(image):

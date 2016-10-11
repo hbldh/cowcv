@@ -21,7 +21,14 @@ def save_roi(img, bb):
         img_md5 = hashlib.md5(bio.read())
         bio.seek(0)
 
-    with open(str(OCR_DATA_DIR.joinpath(str(img_md5) + '.png'))) as f:
-        f.write(bio.read())
-    with open(str(OCR_DATA_DIR.joinpath(str(img_md5) + '.pkl'))) as f:
-        pickle.dump(f, bb)
+        png_file = OCR_DATA_DIR.joinpath(
+                        img_md5.hexdigest() + '.png')
+        if not png_file.exists():
+            with open(str(png_file), mode='wb') as f:
+                f.write(bio.read())
+
+        pkl_file = OCR_DATA_DIR.joinpath(
+                        img_md5.hexdigest() + '.pkl')
+        if not pkl_file.exists():
+            with open(str(pkl_file), mode='wb') as f:
+                pickle.dump(bb, f)

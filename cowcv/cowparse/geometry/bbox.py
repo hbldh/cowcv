@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-utils
+bbox
 -----------
 
-:copyright: 2016-09-30 by hbldh <henrik.blidh@nedomkull.com>
+:copyright: 2016-10-11 by hbldh <henrik.blidh@nedomkull.com>
 
 """
 
@@ -14,13 +14,16 @@ from __future__ import unicode_literals
 from __future__ import absolute_import
 
 import numpy as np
+from cowcv.cowparse.geometry.polygon import Polygon
 
-class BoundingBox(object):
+
+class BoundingBox(Polygon):
     def __init__(self, x, y, w, h):
         self.x = x
         self.y = y
         self.w = w
         self.h = h
+        super(BoundingBox, self).__init__(np.squeeze(self.contour, axis=1))
         self.active_region = None
 
     def __str__(self):
@@ -38,6 +41,17 @@ class BoundingBox(object):
         return self.h, self.w
 
     @property
+    def aspect_ratio(self):
+        return self.w / self.h
+
+    @property
+    def active_region_solidity(self):
+        if self.active_region is not None:
+            return self.active_region.sum() / self.area
+        else:
+            return 0.0
+
+    @property
     def contour(self):
         return np.array([
             [[self.y, self.x], ],
@@ -53,7 +67,6 @@ class BoundingBox(object):
             out = img[self.y:self.y + self.h, self.x:self.x + self.w]
         np.testing.assert_almost_equal(out.shape[:2], self.shape)
         return out
-        #return img[self.y:self.y + self.h + 1, self.x:self.x + self.w + 1]
 
     def add_active_region(self, region):
         if region.shape[:2] != (self.h, self.w):
@@ -87,14 +100,12 @@ class BoundingBox(object):
         return out
 
     def draw_box(self, img, color=(0, 255, 0)):
-        imgcopy = img.copy()
-        imgcopy[self.y, self.x:self.x + self.w] = color
-        imgcopy[self.y:self.y + self.h, self.x + self.w] = color
-        imgcopy[self.y + self.h, self.x:self.x + self.w] = color
-        imgcopy[self.y: self.y + self.h, self.x] = color
-        return imgcopy
+        img[self.y, self.x:self.x + self.w] = color
+        img[self.y:self.y + self.h, self.x + self.w] = color
+        img[self.y + self.h, self.x:self.x + self.w] = color
+        img[self.y: self.y + self.h, self.x] = color
+        return img
 
     def fill_active_region(self, img, color=(255, 0, 0)):
-        imgcopy = img.copy()
-        self.extract(imgcopy)[self.active_region] = color
-        return imgcopy
+        self.extract(img)[self.active_region] = color
+        return img

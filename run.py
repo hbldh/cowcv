@@ -17,16 +17,18 @@ from __future__ import absolute_import
 import numpy as np
 from PIL import Image
 
-from cowcv.data import cow1, cow2, cow1_face_coordinates, cow2_face_coordinates
-from cowcv.cowparse import facefind, tagfind, ocr, utils
+from cowcv.data import get_cow, get_cow_face_coordinates
+from cowcv.cowparse import facefind, tagfind, ocr
 
-cow2 = cow2()
-cowface2_bb = utils.BoundingBox(*cow2_face_coordinates())
-#cowface2_bb = facefind.find_cowface(cow2)
-cowface = cowface2_bb(np.array(cow2))
+nbr = 2
+
+cow = get_cow(nbr)
+#cowface_bb = utils.BoundingBox(*get_cow_face_coordinates(nbr))
+cowface_bb = facefind.find_cowface(cow)
+cowface = cowface_bb(np.array(cow))
 
 rois = tagfind.find_yellow_tag_candidates(cowface)
-rois2 = tagfind.find_yellow_tag_candidates_optional(cowface)
+#rois2 = tagfind.find_yellow_tag_candidates_optional(cowface)
 
 for roi in rois[1:]:
     digits = ocr.detect_digits_in_roi(cowface, roi)

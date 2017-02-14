@@ -30,7 +30,8 @@ cowface = cowface_bb(np.array(cow))
 rois = tagfind.find_yellow_tag_candidates(cowface)
 #rois2 = tagfind.find_yellow_tag_candidates_optional(cowface)
 
-for roi in rois[1:]:
+import cowcv.data.ocr.data
+for roi in rois:
     digits = ocr.detect_digits_in_roi(cowface, roi)
     print(digits)
 

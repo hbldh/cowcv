@@ -185,13 +185,15 @@ class Polygon(object):
         :rtype: float
 
         """
-        # First, check if the polygons are equal. If they are, the intersection calculation
-        # might encounter divide-by-zero errors and is furthermore unnecessary to run...
+        # First, check if the polygons are equal. If they are, the
+        # intersection calculation might encounter divide-by-zero
+        # errors and is furthermore unnecessary to run...
         if np.allclose(self.polygon_points.shape, p.polygon_points.shape) and \
                 np.allclose(self.polygon_points, p.polygon_points):
             return 1.0
 
-        # Return the ratio of size of the intersection and size of the subject polygon.
+        # Return the ratio of size of the intersection
+        # and size of the subject polygon.
         intersection_polygon = self.intersection(p)
         if intersection_polygon is None:
             return 0.

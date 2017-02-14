@@ -32,3 +32,7 @@ def save_roi(img, bb):
         if not pkl_file.exists():
             with open(str(pkl_file), mode='wb') as f:
                 pickle.dump(bb, f)
+
+
+#def ocr_img_iter():
+#    glob.glob()

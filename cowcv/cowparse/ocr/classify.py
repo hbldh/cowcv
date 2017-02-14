@@ -15,7 +15,7 @@ from __future__ import absolute_import
 
 from cowcv.data.ocr import save_roi
 
-SAVE_IMAGES = False
+SAVE_IMAGES = True
 
 
 def classify(img, bb):
@@ -23,6 +23,7 @@ def classify(img, bb):
         save_roi(img, bb)
 
     return 1
+
 
 
 def extract_features(img, bb):
